@@ -41,8 +41,8 @@ Enter answers to the questions just below the >Answer: prompt.
 
 > Answer: 
 > Experience with data analytics: Have taken courses in SQL, Python, and R. Undergraduate degree was in business 
-analytics with a data science focus. Python experience includes an introductory data science course as well as a course in prescriptive analytics that included linear/nonlinear modeling, sensitivity analysis, transportation models, assignment models, network models, simulation modeling, and some forecasing. 
-> Experience with R: I have taken multiple classes in R. Skills that I have learned include data management, various forms of regression and modeling, and data vizulization.
+analytics with a data science focus. Python experience includes an introductory data science course as well as a course in prescriptive analytics (mostly modeling). 
+> Experience with R: I have taken multiple classes in R. Skills that I have learned include data management, various forms of regression and modeling, and data visualization. Specific skills include tidyverse packages (tidyr, ggplot, dplyr), glm's, classification models, and binomial models.
 > I have no experience with Git.
 
 2. Are there any components of the course about which you feel confident?
@@ -51,7 +51,7 @@ analytics with a data science focus. Python experience includes an introductory 
 
 3. Are there any components of the course about which you feel apprehensive?
 
-> Answer: No! 
+> Answer: Not yet!
 
 
 ## 3) GitHub
