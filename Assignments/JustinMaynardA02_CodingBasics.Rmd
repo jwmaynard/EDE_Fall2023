@@ -60,7 +60,16 @@ mean_seq > median_seq
 
 6.  Label each vector with a comment on what type of vector it is.
 
+```{r}
+student_names <- c("a", "b", "c", "e", "f")
+test_scores <- c(85, 92, 71, 30, 97)
+passed <- c(TRUE, TRUE, TRUE, FALSE, TRUE)
+
+```
+
 7.  Combine each of the vectors into a data frame. Assign the data frame an informative name.
+
+student_test_data <- cbind(student_names, test_scores, passed)
 
 8.  Label the columns of your data frame with informative titles.
 
