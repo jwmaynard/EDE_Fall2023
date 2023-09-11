@@ -11,7 +11,10 @@ output: pdf_document
 
 ```
 
-
+git remote -v
+git pull upstream main
+if error, git config pull.rebase false
+ZZ
 
 1.  Discuss the benefits and approach for reproducible data analysis
 2.  Perform simple operations using R coding syntax
