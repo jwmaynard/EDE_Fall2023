@@ -24,9 +24,24 @@ This exercise accompanies the lessons in Environmental Data Analytics on coding 
 
 1.  Generate a sequence of numbers from one to 30, increasing by threes. Assign this sequence a name.
 
+```{r}
+sequence_1_to_30 <- seq(1,30,3)
+```
+
+
 2.  Compute the mean and median of this sequence.
 
+```{r}
+mean_seq <- mean(sequence_1_to_30)
+median_seq <- median(sequence_1_to_30)
+```
+
+
 3.  Ask R to determine whether the mean is greater than the median.
+
+```{r}
+mean_seq > median_seq
+```
 
 4.  Insert comments in your code to describe what you are doing.
 
