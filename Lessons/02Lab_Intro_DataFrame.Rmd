@@ -117,6 +117,10 @@ head(df) #show the first 6 rows of df
 df[,1]
 df[1:10,2]
 df[c(1,2,3),]
+```
+
+
+```{r}
 df[c(1,2,3),]$car_speed
 
 
