@@ -15,6 +15,8 @@ knitr::opts_chunk$set(echo = TRUE)
 2.  Create, manipulate, and explore datasets
 3.  Date objects
 
+#Always use string as factors = true for reading csv
+
 ## Data Types in R
 
 R treats objects differently based on their characteristics. For more information, please see: <https://www.statmethods.net/input/datatypes.html>.
@@ -94,25 +96,38 @@ Question: In the R chunk below, write "dataframe1\$". Press `tab` after you type
 Find a ten-day forecast of temperatures (Fahrenheit) for Durham, North Carolina. Create two vectors, one representing the high temperature on each of the ten days and one representing the low.
 
 ```{r DataExercise-1a}
-
+high_temp <- c(81, 83, 83, 84, 78, 71, 79, 82, 85, 84)
+low_temp <- c(55, 56, 58, 60, 61, 63, 63, 64, 64, 63)
 ```
 
 Now, create two additional vectors that include the ten-day forecast for the high and low temperatures in Celsius. Use a function to create the two new vectors from your existing ones in Fahrenheit.
 
 ```{r DataExercise-1b}
+to_celcius <- function(x){
+  for (i in x)
+  (
+    return((x-32)*(5/9))
+  )
+}
 
+high_temp_C <- to_celcius(high_temp)
+low_temp_C <- to_celcius(low_temp)
 ```
 
 Combine your four vectors into a data frame and add informative column names.
 
 ```{r DataExercise-1c}
-
+Durham_temp <- data.frame(high_temp, low_temp, high_temp_C, low_temp_C)
+names(Durham_temp) <- c("High Temperature Fahrenheit","Low Temperature Fahrenheit","High Temperature Celcius", "Low Temperature Celcius")
+Durham_temp
 ```
 
 Use the common functions `summary` and `sd` to obtain basic data summaries of the ten-day forecast. How would you call these functions differently for the entire data frame vs. a single column? Attempt to demonstrate both options below.
 
 ```{r DataExercise-1d}
-
+summary(Durham_temp)
+sd(Durham_temp$`High Temperature Fahrenheit`)
+sd(Durham_temp$`High Temperature Celcius`)
 ```
 
 ### Date objects
@@ -128,8 +143,8 @@ Remember formatting of dates in R:
 # (code must be uncommented)
 today <- Sys.Date()
 format(today, format = "%B")
-#format(today, format = "")
-#format(today, format = "")
+format(today, format = "%Y")
+format(today, format = "%B %Y")
 #format(today, format = "")
 
 ```
@@ -159,8 +174,8 @@ date_obj_today
 #Ex_3 - on your own...
 str_juneteenth <- "19 June 1865"
 #Since the format is month-day-year we will use function mdy()
-#date_juneteenth <- ()
-#date_juneteenth
+date_juneteenth <- dmy(str_juneteenth)
+date_juneteenth
 ```
 
 ```{r DateExercise2}
