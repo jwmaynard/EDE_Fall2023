@@ -17,13 +17,15 @@ In this course, we will always open the R project file for the course, and addit
 # Working directory should be set to the base folder for the Environmental Data Analytics Course repository, i.e., the folder that houses the R Project file.
 
 getwd()
+#Prints out absolute path
 ```
 
 If your working directory is not set to the folder you want, you have several options. The first is to directly code your working directory. You may do this by defining an absolute file path (below). What are the pitfalls of using an absolute file path?
 
 ```{r Setting the working directory }
 # Absolute file path is commented out
-# setwd("/home/guest/EDE_Fall2023")
+# setwd("/Users/justinmaynard/Fall_2023_EDE")
+getwd()
 ```
 
 You may change your working directory without coding by going to the Session menu in RStudio and navigating to the Set Working Directory tab. From there, you may select from a series of options to reset your working directory. 
@@ -84,7 +86,7 @@ Commons functions to import datasets and store as data frames are *read.table()*
 
 ```{r Importing data}
 # Absolute file path (not recommended)
-#read.csv("/home/guest/EDE_Fall2023/Data/Raw/USGS_Site02085000_Flow_Raw.csv",stringsAsFactors = TRUE)
+#read.csv("/home/guest/Fall_2023_EDE/Data/Raw/USGS_Site02085000_Flow_Raw.csv",stringsAsFactors = TRUE)
 
 # Relative file path (friendly for users regardless of machine)
 USGS.flow.data <- read.csv("./Data/Raw/USGS_Site02085000_Flow_Raw.csv",stringsAsFactors = TRUE)   
@@ -121,9 +123,9 @@ colnames(USGS.flow.data) <- c("agency_cd", "site_no", "datetime",
                               "gage.height.max", "gage.height.max.approval", 
                               "gage.height.min", "gage.height.min.approval", 
                               "gage.height.mean", "gage.height.mean.approval")
-str(USGS.flow.data)
-dim(USGS.flow.data)
-length(USGS.flow.data)
+str(USGS.flow.data) #shows data frame and objects in in
+dim(USGS.flow.data) #shows rows and columns
+length(USGS.flow.data) #shows rows
 
 head(USGS.flow.data)
 head(USGS.flow.data, 10)
