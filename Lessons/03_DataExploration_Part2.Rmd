@@ -42,14 +42,12 @@ Although the `summary()` function is helpful in getting an idea of the spread of
 Note: each of these approaches utilize the package "ggplot2". We will be covering the syntax of ggplot in a later lesson, but for now you should familiarize yourself with the functionality of what each command is doing.
 
 ### Bar Chart (function: geom_bar)
-
+Useful for categorical data
 Visualize count data for categorical variables. 
 
 ```{r, fig.height = 3, fig.width = 4}
-ggplot(USGS.flow.data, aes(x = discharge.mean.approval)) +
+ggplot((USGS.flow.data), aes(x = discharge.mean.approval)) +
   geom_bar()
-
-
 
 ```
 
@@ -88,7 +86,7 @@ An alternate to a histogram is a frequency polygon graph (distributions of value
 #
 ggplot(USGS.flow.data) +
   geom_freqpoly(aes(x = gage.height.mean), bins = 50) +
-  geom_freqpoly(aes(x = gage.height.min), bins = 50, color = "darkgray") +
+  geom_freqpoly(aes(x = gage.height.min), bins = 50, color = "red") +
   geom_freqpoly(aes(x = gage.height.max), bins = 50,  lty = 2) +
   scale_x_continuous(limits = c(0, 10))
 
