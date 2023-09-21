@@ -64,13 +64,13 @@ Litter <- read.csv("/Users/justinmaynard/Fall_2023_EDE/Data/Raw/NEON_NIWO_Litter
 
 5.  What are the dimensions of the dataset?
 
-```{r}
+```{r Q5}
 dim(Neonics)
 ```
 
 6.  Using the `summary` function on the "Effect" column, determine the most common effects that are studied. Why might these effects specifically be of interest?
 
-```{r}
+```{r Q6}
 summary(Neonics$Effect)
 ```
 
@@ -79,7 +79,7 @@ summary(Neonics$Effect)
 
 7.  Using the `summary` function, determine the six most commonly studied species in the dataset (common name). What do these species have in common, and why might they be of interest over other insects? Feel free to do a brief internet search for more information if needed.[TIP: The `sort()` command can sort the output of the summary command...]   
 
-```{r}
+```{r Q7}
 sort(summary(Neonics$Species.Common.Name), decreasing = TRUE)
 ```
 
@@ -87,7 +87,7 @@ sort(summary(Neonics$Species.Common.Name), decreasing = TRUE)
 
 8.  Concentrations are always a numeric value. What is the class of `Conc.1..Author.` column in the dataset, and why is it not numeric?
 
-```{r}
+```{r Q8}
 class(Neonics$Conc.1..Author.)
 ```
 
@@ -97,7 +97,7 @@ class(Neonics$Conc.1..Author.)
 
 9.  Using `geom_freqpoly`, generate a plot of the number of studies conducted by publication year.
 
-```{r}
+```{r Q9}
 plot_q9 <- ggplot(Neonics) +
   geom_freqpoly(
     aes(x = Publication.Year))
@@ -106,7 +106,7 @@ print(plot_q9)
 
 10. Reproduce the same graph but now add a color aesthetic so that different Test.Location are displayed as different colors.
 
-```{r}
+```{r Q10}
 plot_q10 <- ggplot(Neonics) +
   geom_freqpoly(
     aes(x = Publication.Year, color = Test.Location)) 
@@ -121,7 +121,7 @@ Interpret this graph. What are the most common test locations, and do they diffe
 
 [**TIP**: Add `theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))` to the end of your plot command to rotate and align the X-axis labels...]
 
-```{r}
+```{r Q11}
 plot_q11 <- ggplot(Neonics) + 
        geom_bar(aes(x = Endpoint)) + 
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
@@ -137,7 +137,7 @@ NOEL is also a terrestrial endpoint, and is defined as "No-observable-effect-lev
 
 12. Determine the class of collectDate. Is it a date? If not, change to a date and confirm the new class of the variable. Using the `unique` function, determine which dates litter was sampled in August 2018.
 
-```{r}
+```{r Q12}
 print(class(Litter$collectDate))
 Litter$collectDate2 <- ymd(Litter$collectDate)
 print(class(Litter$collectDate2))
@@ -147,7 +147,7 @@ print(unique(Litter$collectDate2))
 
 13. Using the `unique` function, determine how many plots were sampled at Niwot Ridge. How is the information obtained from `unique` different from that obtained from `summary`?
 
-```{r}
+```{r Q13}
 print(unique(Litter$plotID))
 print(summary(Litter$plotID))
 ```
@@ -156,7 +156,7 @@ print(summary(Litter$plotID))
 
 14. Create a bar graph of functionalGroup counts. This shows you what type of litter is collected at the Niwot Ridge sites. Notice that litter types are fairly equally distributed across the Niwot Ridge sites.
 
-```{r}
+```{r Q14}
 plot_q14 <- ggplot(Litter) + 
        geom_bar(aes(x = functionalGroup))  +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
@@ -165,7 +165,7 @@ print(plot_q14)
 
 15. Using `geom_boxplot` and `geom_violin`, create a boxplot and a violin plot of dryMass by functionalGroup.
 
-```{r}
+```{r Q15}
 plot_15_a <- ggplot(Litter) + 
        geom_col(aes(x = functionalGroup, y = dryMass))  +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
