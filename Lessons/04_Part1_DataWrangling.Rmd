@@ -1,3 +1,6 @@
+rm(list = ls())
+
+
 ---
 title: "4: Part 1 - Data Wrangling"
 author: "Environmental Data Analytics | John Fay and Luana Lima | Developed by Kateri Salk"
@@ -28,6 +31,7 @@ library(tidyverse)
 #install.packages(lubridate)
 library(lubridate)
 NTL.phys.data <- read.csv("./Data/Raw/NTL-LTER_Lake_ChemistryPhysics_Raw.csv", stringsAsFactors = TRUE)
+#StringAsFactors - summary will work with character vars
 
 colnames(NTL.phys.data)
 head(NTL.phys.data)
@@ -38,6 +42,7 @@ dim(NTL.phys.data)
 class(NTL.phys.data$sampledate)
 # Format sampledate as date
 NTL.phys.data$sampledate <- as.Date(NTL.phys.data$sampledate, format = "%m/%d/%y")
+class(NTL.phys.data$sampledate)
 ```
 
 ## Data Wrangling
@@ -57,8 +62,10 @@ What is the best way to wrangle data? There are multiple ways to arrive at a spe
 ```{r, results = "hide"}
 vignette("dplyr")
 ```
-
-### Filter
+# slice - changes rows based on location
+#arrange - changes order of row
+#mutate - changes the values of columns and creates new values
+### Filter - choose rows based on column loaction
 
 Filtering allows us to choose certain rows (observations) in our dataset.
 
@@ -75,6 +82,7 @@ Here are the relevant commands used in the `filter` function. Add some notes to 
 ```{r filtering data}
 class(NTL.phys.data$lakeid)
 class(NTL.phys.data$depth)
+NTL.phys.data$lakeid <- as.character(NTL.phys.data$lakeid)
 
 # matrix filtering
 NTL.phys.data.surface1 <- NTL.phys.data[NTL.phys.data$depth == 0,]
@@ -126,7 +134,7 @@ Question: Why don't we filter using row numbers?
 Arranging allows us to change the order of rows in our dataset. By default, the arrange function will arrange rows in ascending order.
 
 ```{r arranging data}
-NTL.phys.data.depth.ascending <- arrange(NTL.phys.data, depth)
+NTL.phys.data.depth.ascending <- arrange(NTL.phys.data, depth) #og dataset, colum to arrange by
 NTL.phys.data.depth.descending <- arrange(NTL.phys.data, desc(depth))
 
 # Exercise: 
@@ -149,7 +157,7 @@ Mutating allows us to add new columns that are functions of existing columns. Op
 
 ```{r mutating data}
 NTL.phys.data.temps <- mutate(NTL.phys.data.temps, temperature_F = (temperature_C*9/5) + 32)
-
+#mutate(og dataset, new column = calculation)
 ```
 
 ## Lubridate
@@ -165,6 +173,7 @@ NTL.phys.data.PeterPaul1 <- select(NTL.phys.data.PeterPaul1, lakeid:daynum, mont
 
 # find out the start and end dates of the dataset
 interval(NTL.phys.data.PeterPaul1$sampledate[1], NTL.phys.data.PeterPaul1$sampledate[21613])
+
 interval(first(NTL.phys.data.PeterPaul1$sampledate), last(NTL.phys.data.PeterPaul1$sampledate))
 ```
 
