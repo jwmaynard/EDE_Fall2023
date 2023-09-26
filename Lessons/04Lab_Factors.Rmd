@@ -1,3 +1,6 @@
+rm(list = ls())
+
+
 ---
 title: "Lab 4: Factors"
 author: "Environmental Data Analytics | John Fay and Luana Lima "
@@ -13,8 +16,10 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 #Read packages
 library(tidyverse);library(lubridate); library(here)
 
+here('Data/Raw')
+
 #Read in data, don't convert strings to factors
-sites <- read.csv(here('Data/Raw/NWIS_SiteFlowData_NE_Raw.csv'))
+sites <- read.csv(here('Data','Raw/NWIS_SiteFlowData_NE_RAW.csv'))
 dim(sites)
 
 #Convert date column to date object

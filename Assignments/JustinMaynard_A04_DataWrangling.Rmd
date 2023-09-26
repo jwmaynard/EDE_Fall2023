@@ -1,6 +1,8 @@
+rm(list = ls())
+
 ---
 title: "Assignment 4: Data Wrangling"
-author: "Student Name"
+author: "Justin Maynard"
 output: pdf_document
 geometry: margin=2.54cm
 ---
@@ -32,12 +34,28 @@ The completed exercise is due on Thursday, Sept 28th @ 5:00pm.
 
 ```{r setup, message = FALSE}
 #1a 
-
+library (tidyverse)
+library (lubridate)
+library (here)
 #1b 
+getwd()
+setwd(here("Data/Raw"))
+here("Data/Raw")
+
 
 #1c 
+EPA_Air_O3_2018 <- read.csv(file = here("Data/Raw/EPAair_O3_NC2018_raw.csv"), stringsAsFactors = TRUE)
+EPA_Air_O3_2019 <- read.csv(file = here("Data/Raw/EPAair_O3_NC2019_raw.csv"), stringsAsFactors = TRUE)
+EPA_Air_PM25_2018 <- read.csv(file = here("Data/Raw/EPAair_PM25_NC2018_raw.csv"), stringsAsFactors = TRUE)
+EPA_Air_PM25_2019 <- read.csv(file = here("Data/Raw/EPAair_PM25_NC2019_raw.csv"), stringsAsFactors = TRUE)
+
 
 #2 
+glimpse(EPA_Air_O3_2018)
+glimpse(EPA_Air_O3_2019)
+glimpse(EPA_Air_PM25_2018)
+glimpse(EPA_Air_PM25_2019)
+
 
 ```
 
@@ -54,12 +72,38 @@ The completed exercise is due on Thursday, Sept 28th @ 5:00pm.
 
 ```{r}
 #3
+EPA_Air_O3_2018$Date <- mdy(EPA_Air_O3_2018$Date)
+EPA_Air_O3_2019$Date <- mdy(EPA_Air_O3_2019$Date)
+EPA_Air_PM25_2018$Date <- mdy(EPA_Air_PM25_2018$Date)
+EPA_Air_PM25_2019$Date <- mdy(EPA_Air_PM25_2019$Date)
+
+class(EPA_Air_O3_2018$Date)
+class(EPA_Air_O3_2019$Date)
+class(EPA_Air_PM25_2018$Date)
+class(EPA_Air_PM25_2019$Date)
 
 #4
+EPA_Air_O3_2018_select <- select(EPA_Air_O3_2018, Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
+
+EPA_Air_O3_2019_select <- select(EPA_Air_O3_2019, Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
+
+EPA_Air_PM25_2018_select <- select(EPA_Air_PM25_2018, Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
+
+EPA_Air_PM25_2019_select <- select(EPA_Air_PM25_2019, Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
 
 #5
+EPA_Air_PM25_2018_select <- mutate(EPA_Air_PM25_2018_select, AQS_PARAMETER_DESC = "PM2.5" )
+EPA_Air_PM25_2019_select <- mutate(EPA_Air_PM25_2019_select, AQS_PARAMETER_DESC = "PM2.5" )
 
 #6
+write.csv(EPA_Air_O3_2018_select, 
+          file = "./Data/Processed/EPAair_O3_NC2018_processed.csv")
+write.csv(EPA_Air_O3_2019_select, 
+          file = "./Data/Processed/EPAair_O3_NC2019_processed.csv")
+write.csv(EPA_Air_PM25_2018_select, 
+          file = "./Data/Processed/EPair_PM25_NC2018_processed.csv")
+write.csv(EPA_Air_PM25_2019_select, 
+          file = "./Data/Processed/EPair_PM25_NC2019_processed.csv")
 
 ```
 
@@ -86,14 +130,28 @@ The completed exercise is due on Thursday, Sept 28th @ 5:00pm.
 
 ```{r}
 #7 
+combined_sets <- rbind(EPA_Air_O3_2018_select, EPA_Air_O3_2019_select, EPA_Air_PM25_2018_select, EPA_Air_PM25_2019_select)
 
 #8 
 
-#9
+wrangled_sets <- 
+  combined_sets %>% filter(Site.Name == "Linville Falls" | Site.Name == "Durham Armory" | Site.Name == "Leggett" | Site.Name == "Hattie Avenue" | Site.Name == "Clemmons Middle" | Site.Name == "Mendenhall School" | Site.Name == "Frying Pan Mountain" | Site.Name == "West Johnston Co." | Site.Name == "Garinger High School" | Site.Name == "Castle Hayne" | Site.Name == "Pitt Agri. Center" | Site.Name == "Bryson City" | Site.Name == "Millbrook School") %>% 
+  group_by(Date, Site.Name, AQS_PARAMETER_DESC, COUNTY) %>% 
+  summarise(mean_aqi = mean(DAILY_AQI_VALUE),
+            mean_latitude = mean(SITE_LATITUDE),
+            mean_longitude = mean(SITE_LONGITUDE)) %>% 
+  mutate(Month = month(Date)) %>% 
+  mutate(Year = year(Date))
+  
 
+#9
+wrangled_sets_spread <- pivot_wider(wrangled_sets, names_from = AQS_PARAMETER_DESC, values_from = mean_aqi)
 #10
+dim(wrangled_sets_spread)
 
 #11
+write.csv(wrangled_sets_spread, 
+          file = "EPAair_O3_PM25_NC1819_Processed.csv")
 
 ```
 
@@ -107,10 +165,14 @@ The completed exercise is due on Thursday, Sept 28th @ 5:00pm.
 ```{r}
 
 #12
-
+q11 <- wrangled_sets_spread %>% 
+  group_by(Site.Name, Month, Year) %>% 
+  summarise(mean_AQI_Ozone = mean(Ozone),
+            mean_AQI_PM25 = mean(PM2.5)) %>% 
+  drop_na(mean_AQI_Ozone)
 
 #13
-
+dim(q11)
 
 ```
 

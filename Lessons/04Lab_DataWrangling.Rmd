@@ -1,3 +1,6 @@
+rm(list = ls())
+
+
 ---
 ---
 title: "Lab 4: Data Wrangling"
@@ -60,6 +63,9 @@ class(NTL.phys.data$depth)
 # dplyr filtering
 NTL.phys.data.surface <- filter(NTL.phys.data, depth == 0)
 
+levels(NTL.phys.data$lakename)
+       
+
 # Choose multiple conditions to filter
 summary(NTL.phys.data$lakename)
 NTL.phys.data.PeterPaul <- 
@@ -72,13 +78,18 @@ NTL.phys.data.JunethruOctober <- filter(NTL.phys.data, daynum %in% c(152:304))
 
 ```{r Exercise 1 & 2}
 # Exercise 1: 
-# filter NTL.phys.data for the year 1999
+# filter NTL.phys.data for the year 1999 - 1898 rows
 # what code do you need to use, based on the class of the variable?
+class(NTL.phys.data$year)
 
+exercise1 <- filter(NTL.phys.data, year4 %in% c(1999))
 
 # Exercise 2: 
-# filter NTL.phys.data for Tuesday Lake from 1990 through 1999.
-
+# filter NTL.phys.data for Tuesday Lake from 1990 through 1999. - 1970 rows
+exercise2 <- 
+  NTL.phys.data %>%
+  filter(lakename %in% "Tuesday Lake") %>%
+  filter(year4 >= 1990 & year4 <= 1999)
 
 ```
 Question: Why don't we filter using row numbers?
@@ -103,6 +114,18 @@ NTL.phys.data.processed <-
 
 #Exercise 3: Using a pipe filter NTL.phys.data for Tuesday Lake from 1990 
 # through 1999 only for July.
+
+NTL.phys.data$month = month(NTL.phys.data$sampledate)
+
+class(NTL.phys.data$month)
+
+exercise3 <- 
+  NTL.phys.data %>%
+  filter(lakename %in% "Tuesday Lake") %>%
+  filter(year4 >= 1990 & year4 <= 1999) %>%
+  filter(month == 7)
+
+
 
 
 #Exercise 4: Using the data from part 3, a pipe, and the summarize() function 
