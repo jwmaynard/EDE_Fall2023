@@ -1,4 +1,9 @@
-rm(list = ls())
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+#rm(list = ls())
 
 ---
 title: "Assignment 4: Data Wrangling"
@@ -43,19 +48,23 @@ setwd(here("Data/Raw"))
 here("Data/Raw")
 
 #1c 
-EPA_Air_O3_2018 <- read.csv(file = here("Data/Raw/EPAair_O3_NC2018_raw.csv"), stringsAsFactors = TRUE)
-EPA_Air_O3_2019 <- read.csv(file = here("Data/Raw/EPAair_O3_NC2019_raw.csv"), stringsAsFactors = TRUE)
-EPA_Air_PM25_2018 <- read.csv(file = here("Data/Raw/EPAair_PM25_NC2018_raw.csv"), stringsAsFactors = TRUE)
-EPA_Air_PM25_2019 <- read.csv(file = here("Data/Raw/EPAair_PM25_NC2019_raw.csv"), stringsAsFactors = TRUE)
+EPA_Air_O3_2018 <- read.csv(file = here("Data/Raw/EPAair_O3_NC2018_raw.csv"), 
+                            stringsAsFactors = TRUE)
+EPA_Air_O3_2019 <- read.csv(file = here("Data/Raw/EPAair_O3_NC2019_raw.csv"), 
+                            stringsAsFactors = TRUE)
+EPA_Air_PM25_2018 <- read.csv(file = here("Data/Raw/EPAair_PM25_NC2018_raw.csv"),
+                              stringsAsFactors = TRUE)
+EPA_Air_PM25_2019 <- read.csv(file = here("Data/Raw/EPAair_PM25_NC2019_raw.csv"), 
+                              stringsAsFactors = TRUE)
 
 
 #2 
-print(glimpse(EPA_Air_O3_2018))
-print(glimpse(EPA_Air_O3_2019))
-print(glimpse(EPA_Air_PM25_2018))
-print(glimpse(EPA_Air_PM25_2019))
+#glimpse(EPA_Air_O3_2018)
+#glimpse(EPA_Air_O3_2019)
+#glimpse(EPA_Air_PM25_2018)
+#glimpse(EPA_Air_PM25_2019)
 
-
+#Had to comment it out, the output from the knit was too large.
 ```
 
 
@@ -82,13 +91,17 @@ print(class(EPA_Air_PM25_2018$Date))
 print(class(EPA_Air_PM25_2019$Date))
 
 #4
-EPA_Air_O3_2018_select <- select(EPA_Air_O3_2018, Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
+EPA_Air_O3_2018_select <- select(EPA_Air_O3_2018, Date, DAILY_AQI_VALUE, Site.Name, 
+                                 AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
 
-EPA_Air_O3_2019_select <- select(EPA_Air_O3_2019, Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
+EPA_Air_O3_2019_select <- select(EPA_Air_O3_2019, Date, DAILY_AQI_VALUE, Site.Name, 
+                                 AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
 
-EPA_Air_PM25_2018_select <- select(EPA_Air_PM25_2018, Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
+EPA_Air_PM25_2018_select <- select(EPA_Air_PM25_2018, Date, DAILY_AQI_VALUE, Site.Name, 
+                                AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
 
-EPA_Air_PM25_2019_select <- select(EPA_Air_PM25_2019, Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
+EPA_Air_PM25_2019_select <- select(EPA_Air_PM25_2019, Date, DAILY_AQI_VALUE, Site.Name,
+                                AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
 
 #5
 EPA_Air_PM25_2018_select <- mutate(EPA_Air_PM25_2018_select, AQS_PARAMETER_DESC = "PM2.5" )
@@ -129,11 +142,18 @@ write.csv(EPA_Air_PM25_2019_select,
 
 ```{r}
 #7 
-combined_sets <- rbind(EPA_Air_O3_2018_select, EPA_Air_O3_2019_select, EPA_Air_PM25_2018_select, EPA_Air_PM25_2019_select)
+combined_sets <- rbind(EPA_Air_O3_2018_select, EPA_Air_O3_2019_select, EPA_Air_PM25_2018_select,
+                       EPA_Air_PM25_2019_select)
 
 #8 
 wrangled_sets <- 
-  combined_sets %>% filter(Site.Name == "Linville Falls" | Site.Name == "Durham Armory" | Site.Name == "Leggett" | Site.Name == "Hattie Avenue" | Site.Name == "Clemmons Middle" | Site.Name == "Mendenhall School" | Site.Name == "Frying Pan Mountain" | Site.Name == "West Johnston Co." | Site.Name == "Garinger High School" | Site.Name == "Castle Hayne" | Site.Name == "Pitt Agri. Center" | Site.Name == "Bryson City" | Site.Name == "Millbrook School") %>% 
+  combined_sets %>% filter(Site.Name == "Linville Falls" | Site.Name == "Durham Armory" |
+                             Site.Name == "Leggett" | Site.Name == "Hattie Avenue" | 
+                             Site.Name == "Clemmons Middle" | Site.Name == "Mendenhall School" |
+                             Site.Name == "Frying Pan Mountain" | Site.Name == "West Johnston Co." |
+                             Site.Name == "Garinger High School" | Site.Name == "Castle Hayne" |
+                             Site.Name == "Pitt Agri. Center" | Site.Name == "Bryson City" |
+                             Site.Name == "Millbrook School") %>% 
   group_by(Date, Site.Name, AQS_PARAMETER_DESC, COUNTY) %>% 
   summarise(mean_aqi = mean(DAILY_AQI_VALUE),
             mean_latitude = mean(SITE_LATITUDE),
@@ -144,7 +164,8 @@ wrangled_sets <-
 print(dim(wrangled_sets))
 
 #9
-wrangled_sets_spread <- pivot_wider(wrangled_sets, names_from = AQS_PARAMETER_DESC, values_from = mean_aqi)
+wrangled_sets_spread <- pivot_wider(wrangled_sets, names_from = AQS_PARAMETER_DESC, 
+                                    values_from = mean_aqi)
 #10
 print(dim(wrangled_sets_spread))
 
