@@ -42,7 +42,6 @@ getwd()
 setwd(here("Data/Raw"))
 here("Data/Raw")
 
-
 #1c 
 EPA_Air_O3_2018 <- read.csv(file = here("Data/Raw/EPAair_O3_NC2018_raw.csv"), stringsAsFactors = TRUE)
 EPA_Air_O3_2019 <- read.csv(file = here("Data/Raw/EPAair_O3_NC2019_raw.csv"), stringsAsFactors = TRUE)
@@ -51,10 +50,10 @@ EPA_Air_PM25_2019 <- read.csv(file = here("Data/Raw/EPAair_PM25_NC2019_raw.csv")
 
 
 #2 
-glimpse(EPA_Air_O3_2018)
-glimpse(EPA_Air_O3_2019)
-glimpse(EPA_Air_PM25_2018)
-glimpse(EPA_Air_PM25_2019)
+print(glimpse(EPA_Air_O3_2018))
+print(glimpse(EPA_Air_O3_2019))
+print(glimpse(EPA_Air_PM25_2018))
+print(glimpse(EPA_Air_PM25_2019))
 
 
 ```
@@ -77,10 +76,10 @@ EPA_Air_O3_2019$Date <- mdy(EPA_Air_O3_2019$Date)
 EPA_Air_PM25_2018$Date <- mdy(EPA_Air_PM25_2018$Date)
 EPA_Air_PM25_2019$Date <- mdy(EPA_Air_PM25_2019$Date)
 
-class(EPA_Air_O3_2018$Date)
-class(EPA_Air_O3_2019$Date)
-class(EPA_Air_PM25_2018$Date)
-class(EPA_Air_PM25_2019$Date)
+print(class(EPA_Air_O3_2018$Date))
+print(class(EPA_Air_O3_2019$Date))
+print(class(EPA_Air_PM25_2018$Date))
+print(class(EPA_Air_PM25_2019$Date))
 
 #4
 EPA_Air_O3_2018_select <- select(EPA_Air_O3_2018, Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
@@ -133,7 +132,6 @@ write.csv(EPA_Air_PM25_2019_select,
 combined_sets <- rbind(EPA_Air_O3_2018_select, EPA_Air_O3_2019_select, EPA_Air_PM25_2018_select, EPA_Air_PM25_2019_select)
 
 #8 
-
 wrangled_sets <- 
   combined_sets %>% filter(Site.Name == "Linville Falls" | Site.Name == "Durham Armory" | Site.Name == "Leggett" | Site.Name == "Hattie Avenue" | Site.Name == "Clemmons Middle" | Site.Name == "Mendenhall School" | Site.Name == "Frying Pan Mountain" | Site.Name == "West Johnston Co." | Site.Name == "Garinger High School" | Site.Name == "Castle Hayne" | Site.Name == "Pitt Agri. Center" | Site.Name == "Bryson City" | Site.Name == "Millbrook School") %>% 
   group_by(Date, Site.Name, AQS_PARAMETER_DESC, COUNTY) %>% 
@@ -143,11 +141,12 @@ wrangled_sets <-
   mutate(Month = month(Date)) %>% 
   mutate(Year = year(Date))
   
+print(dim(wrangled_sets))
 
 #9
 wrangled_sets_spread <- pivot_wider(wrangled_sets, names_from = AQS_PARAMETER_DESC, values_from = mean_aqi)
 #10
-dim(wrangled_sets_spread)
+print(dim(wrangled_sets_spread))
 
 #11
 write.csv(wrangled_sets_spread, 
@@ -163,7 +162,6 @@ write.csv(wrangled_sets_spread,
 13. Call up the dimensions of the summary dataset.
 
 ```{r}
-
 #12
 q11 <- wrangled_sets_spread %>% 
   group_by(Site.Name, Month, Year) %>% 
@@ -172,10 +170,10 @@ q11 <- wrangled_sets_spread %>%
   drop_na(mean_AQI_Ozone)
 
 #13
-dim(q11)
+print(dim(q11))
 
 ```
 
 14. Why did we use the function `drop_na` rather than `na.omit`?
 
-> Answer: 
+> Answer: If na.omit is used the the row will be dropped if there is a NA value in any column. Drop_na removes rows only if there is a NA value in a specific column. For this context we used drop_na as we are okay with there being missing values in coulumn mean_AQI_PM25.
