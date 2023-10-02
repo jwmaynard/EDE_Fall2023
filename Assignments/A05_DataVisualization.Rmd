@@ -9,6 +9,9 @@ fig_width: 4
 editor_options: 
   chunk_output_type: console
 ---
+```{r}
+#rm(list = ls())
+```
 
 ## OVERVIEW
 
@@ -32,9 +35,20 @@ This exercise accompanies the lessons in Environmental Data Analytics on Data Vi
 
 ```{r initialize project}
 #1 
+library(tidyverse)
+library(lubridate)
+library(here)
+library(cowplot)
+here()
+NTL_LTER_chemistry <- read.csv(file = "Data/Processed_KEY/NTL-LTER_Lake_Chemistry_Nutrients_PeterPaul_Processed.csv")
+NEON_NIWO_litter <- read.csv(file = "Data/Processed_KEY/NEON_NIWO_Litter_mass_trap_Processed.csv")
 
 #2 
+class(NTL_LTER_chemistry$sampledate)
+class(NEON_NIWO_litter$collectDate)
 
+NTL_LTER_chemistry$sampledate <- ymd(NTL_LTER_chemistry$sampledate )
+NEON_NIWO_litter$collectDate <- ymd(NEON_NIWO_litter$collectDate)
 ```
 ## Define your theme
 3. Build a theme and set it as your default theme. Customize the look of at least two of the following: 
@@ -46,7 +60,11 @@ This exercise accompanies the lessons in Environmental Data Analytics on Data Vi
 
 ```{r build plot theme}
 #3
-
+my_theme <- theme_base() + 
+  theme(
+    )
+    
+  )
 ```
 
 ## Create graphs
@@ -56,7 +74,9 @@ For numbers 4-7, create ggplot graphs and adjust aesthetics to follow best pract
 
 ```{r plot total P vs PO4}
 #4 
-
+q4 <- ggplot(NTL_LTER_chemistry) +
+  geom_freqpoly(aes(x = ))
+  
 ```
 
 
