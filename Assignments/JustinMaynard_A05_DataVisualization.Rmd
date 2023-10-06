@@ -1,6 +1,6 @@
 ---
 title: "Assignment 5: Data Visualization"
-author: "Student Name"
+author: "Justin Maynard"
 date: "Fall 2023"
 output: pdf_document
 geometry: margin=2.54cm
@@ -10,6 +10,7 @@ editor_options:
   chunk_output_type: console
 ---
 ```{r}
+#Clear environment
 #rm(list = ls())
 ```
 
@@ -60,11 +61,14 @@ NEON_NIWO_litter$collectDate <- ymd(NEON_NIWO_litter$collectDate)
 
 ```{r build plot theme}
 #3
-my_theme <- theme_base() + 
+my_theme <-
   theme(
-    )
-    
-  )
+      plot.background = element_rect(fill = "#f5f0d9", color = NA),
+      panel.background = element_rect(fill = "#f5f0d9", color = NA),
+      legend.background = element_rect(fill = "#f5f0d9", color = NA),
+      panel.grid.major =  element_line(color = "#d0d0d0", linewidth = .2),
+      legend.position="top")
+      
 ```
 
 ## Create graphs
@@ -82,7 +86,8 @@ q4 <- ggplot(NTL_LTER_chemistry,
              )) +
   geom_point() + 
   geom_smooth(method = lm, color = "black") + 
-  ylim(c(0,50))
+  ylim(c(0,50)) + my_theme
+q4
 ```
 
 
@@ -102,7 +107,10 @@ q5a <- ggplot(NTL_LTER_chemistry,
                 y = temperature_C,
                 color = lakename
               )) + 
-  geom_boxplot()
+  geom_boxplot(fill = "grey90") + 
+  my_theme + 
+  scale_x_discrete(limits = month.abb)
+q5a
 
 q5b <- ggplot(NTL_LTER_chemistry, 
               aes(
@@ -110,7 +118,9 @@ q5b <- ggplot(NTL_LTER_chemistry,
                 y = tp_ug,
                 color = lakename
               )) + 
-  geom_boxplot()
+  geom_boxplot(fill = "grey90") + my_theme + 
+  scale_x_discrete(limits = month.abb)
+q5b
 
 q5c <- ggplot(NTL_LTER_chemistry, 
               aes(
@@ -118,20 +128,23 @@ q5c <- ggplot(NTL_LTER_chemistry,
                 y = tn_ug,
                 color = lakename
               )) + 
-  geom_boxplot()
+  geom_boxplot(fill = "grey90") + my_theme + 
+  scale_x_discrete(limits = month.abb)
+q5c
 
-plot_grid(q5a,
+q5_final <- plot_grid(q5a + theme(legend.position="top"),
           q5b + theme(legend.position = "none"),
           q5c + theme(legend.position = "none"),
           nrow = 3,
           align = 'h',
-          rel_heights = c(1.25, 1))
+          rel_heights = c(1.25, 1)) + my_theme
+q5_final
 
 ```
 
 Question: What do you observe about the variables of interest over seasons and between lakes? 
 
-> Answer: 
+> Answer: The temperature increases during the summer months, while the tp_ug slighly increases for Peter Lake in the late summer. The tn_ug also slightly increases for Peter lake in the late summer.
 
 6. [Niwot Ridge] Plot a subset of the litter dataset by displaying only the "Needles" functional group. Plot the dry mass of needle litter by date and separate by NLCD class with a color aesthetic. (no need to adjust the name of each land use)
 
@@ -139,26 +152,28 @@ Question: What do you observe about the variables of interest over seasons and b
 
 ```{r Plot litter}
 #6
-ggplot(subset(NEON_NIWO_litter, functionalGroup == "Needles"),
+q6 <- ggplot(subset(NEON_NIWO_litter, functionalGroup == "Needles"),
        aes(
          x = collectDate,
          y = dryMass,
          color = nlcdClass
        )) +
-  geom_point() 
+  geom_point() + my_theme
+q6
 
 #7
-ggplot(subset(NEON_NIWO_litter, functionalGroup == "Needles"),
+q7 <- ggplot(subset(NEON_NIWO_litter, functionalGroup == "Needles"),
        aes(
          x = collectDate,
          y = dryMass,
          color = nlcdClass
        )) +
   geom_point() +
-  facet_wrap(vars(nlcdClass), nrow = 3)
+  facet_wrap(vars(nlcdClass), nrow = 3) + my_theme
+q7
 
 
 ```
 Question: Which of these plots (6 vs. 7) do you think is more effective, and why? 
 
-> Answer:
+> Answer: Plot 7 is more effective as it sepeates out the nlcd class type, allowing one to visualize the change in dry mass for each class by date. Plot 6 is too busy to try and determine change in dry mass by class by year.
