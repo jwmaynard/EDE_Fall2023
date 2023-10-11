@@ -5,11 +5,16 @@ output: pdf_document
 geometry: margin=2.54cm
 editor_options: 
   chunk_output_type: console
+toc: true
 ---
+\listoftables
+
 
 ## Set up the coding environment
 
-```{r setup}
+```{r setup, warning=FALSE, echo=FALSE, include=FALSE}
+#knitr::opts_chunk$set(include = FALSE)
+#^Same thing ass using R code attribute
 #Load packages
 library(tidyverse);library(here);library(lubridate)
 
@@ -22,6 +27,8 @@ nutrient_data_raw <- read.csv(
 nutrient_data_raw$sampledate = ymd(nutrient_data_raw$sampledate)
 
 ```
+
+The raw dataset has `r nrow(nutrient_data_raw)` rows and `r ncol(nutrient_data_raw)` columns.
 
 ## Wrangle the data
 
@@ -42,5 +49,14 @@ nutrient_data_tn <- nutrient_data %>%
     sd_tn_ug = sd(tn_ug)
   )
 ```
-
+\newpage
 ## Report the summary
+
+```{r create tables, echo=FALSE}
+knitr::kable(nutrient_data_tn, caption = "Summary of Total Nitrogen")
+#right colon = right aligned, left = left aligned
+
+knitr::kable(nutrient_data_tn, caption = "Another summary of Total Nitrogen")
+
+```
+
