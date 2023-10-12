@@ -74,7 +74,6 @@ the_parameter = 'tp_ug'
 start_year = 1990
 end_year = 2005
 
-
 my_plot <- nutrient_data %>% 
   filter(year4 > start_year & year4 < end_year) %>% 
   ggplot(
@@ -100,8 +99,45 @@ my_plot <- nutrient_data %>%
     end = 1, 
     guide = guide_colorbar(reverse = T),
     direction = -1)
+```
 
-my_plot
+```{r}
+plot_it <- function(the_parameter,start_year,end_year){
+    my_plot <- nutrient_data %>% 
+    filter(year4 > start_year & year4 < end_year) %>% 
+    ggplot(
+      aes(
+        x = sampledate, 
+        y = !!sym(the_parameter), 
+        fill = depth_id, 
+        shape = lakename)) +
+    geom_point(alpha = 0.8, size = 2) +
+    scale_x_date(
+      date_breaks = "1 years",
+      date_labels = '%Y') +
+    scale_shape_manual(values = c(21, 24)) +
+    labs(
+      title = "Concentration over time, by depth and lake",
+      x = "Date", 
+      y = expression(Concentration ~ (mu*g / L)), 
+      shape = "Lake", 
+      fill = "Depth ID") +
+    scale_fill_viridis_c(
+      option = "mako", 
+      begin = 0, 
+      end = 1, 
+      guide = guide_colorbar(reverse = T),
+      direction = -1)
+  return(my_plot)
+}
+
+```
+
+```{r}
+plot_it("tp_ug","1992","2005")
+```
+
+```{r Tweak plot to use variables, echo=FALSE}
 ```
 
 ##Interactive R with Shiny Widgets

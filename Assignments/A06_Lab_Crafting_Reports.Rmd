@@ -32,6 +32,7 @@ Table: EPA Air Quality
 |Source  |   EPA Air Quality System (AQS)|
 |Date |   2018-2019|
 |Filename |  EPAair_O3_PM25_NC1819_Processed.csv|
+\newpage
 
 ---
 
@@ -49,7 +50,7 @@ epa_data <- read.csv(
   stringsAsFactors = TRUE) %>% 
   mutate(Date = ymd(Date))
 ```
-
+\newpage
 ---
 
 ## Task 3: Creating tables
@@ -100,7 +101,7 @@ knitr::kable(summary_Ozone,caption = "Mean Ozone", col.names = c("County", "$\\m
 
 Create two separate code chunks that create boxplots of the distribution of Ozone levels by month using, one for only records collected in 2018 and one for records in 2019. Customize the chunk options such that the final figures are displayed but not the code used to generate the figures. In addition, align the plots on the left side of the page and set the figure heights so both plots fit on the same page with minimal space remaining. Lastly, add a `fig.cap` chunk option to add a caption (title) to your plot that will display underneath the figure.
 
-```{r echo=FALSE, fig.cap = "Concentration of Ozone levels in 2018", fig.align='left', fig.dim = c(5,4), warning=FALSE}
+```{r echo=FALSE, fig.cap = "Concentration of Ozone levels in 2018", fig.align='left', fig.dim = c(4,3), warning=FALSE}
 
 
 Ozone_2018 <- epa_data %>% 
@@ -115,7 +116,7 @@ Ozone_2018 <- epa_data %>%
 Ozone_2018
 ```
 
-```{r echo=FALSE, fig.cap = "Concentration of Ozone levels in 2019", fig.align='left', fig.dim = c(5,4), warning=FALSE}
+```{r echo=FALSE, fig.cap = "Concentration of Ozone levels in 2019", fig.align='left', fig.dim = c(4,3), warning=FALSE}
 Ozone_2019 <- epa_data %>% 
   filter(Year == 2019) %>% 
   ggplot(
