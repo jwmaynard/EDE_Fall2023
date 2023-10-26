@@ -88,7 +88,7 @@ summary(Litter.Totals.anova)
 # Format ANOVA as lm
 Litter.Totals.anova2 <- lm(data = Litter.Totals, dryMass ~ plotID)
 summary(Litter.Totals.anova2)
-
+ 
 # Checking model fit and assumptions
 # ANOVA is robust against departures from normality.
 plot(Litter.Totals.anova2)
