@@ -29,6 +29,8 @@ library(zoo)
 library(Kendall)
 #install.packages("tseries")
 library(tseries)
+install.packages("ggplot2")
+library(ggplot2)
 
 # Set theme
 mytheme <- theme_classic(base_size = 14) +
@@ -53,6 +55,7 @@ wind_data$DATE <- ym(wind_data$DATE)
 
 Time series are a special class of dataset, where a response variable is tracked over time. The frequency of measurement and the timespan of the dataset can vary widely. At its most simple, a time series model includes an explanatory time component and a response variable. Mixed models can include additional explanatory variables (check out the `nlme` and `lme4` R packages). We will cover a few simple applications of time series analysis in these lessons, with references for how to take analyses further.
 
+
 ### Opportunities
 
 Analysis of time series presents several opportunities. For environmental data, some of the most common questions we can answer with time series modeling are:
@@ -60,11 +63,43 @@ Analysis of time series presents several opportunities. For environmental data, 
 * Has there been an increasing or decreasing **trend** in the response variable over time?
 * Can we **forecast** conditions in the future?
 
+### Notes
+
+* Stationary data - no significant upward or downward trend
+* Non stationary - time series data that exhibits a significant upward or dwonward trend over time
+** Seasonal data - time series variable exhibiting a repeating patters at regular intervals over time
+
+* Stationarity process: probability laws that govern behavior of the process do not change over time (eg: distribution of observations at time 1 = distribution of observations at time 2)
+
+* Partial autocorrelation function
+**ACF measures linear dependence among process Yt and Yt-h
+**PACF removes influence of all intermediate variables, will have only direct correlation between Yt and Yt-h
+
+*Trend component
+**long term tendency can increase (upward movement) or decrease (downward movement)
+**can be linear or nonlinear
+
+*Linear trend component
+*We can write Yi = B0 + B1ti + ei
+*Slope B1 and intercept B2 are unkown parameters, ei is the error term
+*For each observation t remove the trend
+*Ydetrendt = Yt - (B0 + B1t)
+
+*Non linear trends
+*Can nonlinear curves to data
+
+*Seasonal component
+*Short term regular wave like patterns, observed within 1 year
+
+*4 components
+*Trend, seasonality, cyclical, randomS
+
 ### Challenges
 
 Time series datasets come with several caveats, which need to be addressed in order to effectively model the system. A few common challenges that arise (and can occur together within a single dataset) are: 
 
 * **Autocorrelation**: Data points are not independent from one another (i.e., the measurement at a given time point is dependent on previous time point(s))
+Measure of correlation between two adjacent values of the same variables
 * **Data gaps**: Data are not collected at regular intervals, necessitating *interpolation* between measurements.
 * **Seasonality**: seasonal patterns in variables occur at regular intervals, impeding clear interpretation of a monotonic (unidirectional) trend.
 * **Heteroscedasticity**: The variance of the time series is not constant over time
@@ -116,6 +151,7 @@ Note: time series objects must be equispaced. In our case, we have daily data wi
 
 ```{r}
 EnoDischarge.late_ts <- ts(EnoDischarge.late$discharge.mean, start = c(1985,1), frequency = 365)
+head(EnoDischarge.late_ts)
 ```
 
 The `stl` function decomposes the time series object into its component parts. We must specify that the window for seasonal extraction is either "periodic" or a specific number of at least 7. The decomposition proceeds through a loess (locally estimated scatterplot smoothing) function.
@@ -221,6 +257,7 @@ Note that wind speed has a seasonal cycle. We might be interested in knowing how
 # Generate time series (trend test needs ts, not data.frame)
 f_month <- month(first(wind_data_clean$DATE))
 f_year <- year(first(wind_data_clean$DATE))
+
 wind_data_ts <- ts(wind_data_clean$AWND.clean,
                    start=c(f_year,f_month),
                    frequency=12) 
