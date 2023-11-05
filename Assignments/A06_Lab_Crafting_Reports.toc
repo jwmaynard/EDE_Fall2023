@@ -1,0 +1,9 @@
+\contentsline {subsection}{Objectives:}{1}{section*.2}%
+\contentsline {subsection}{Directions}{1}{section*.3}%
+\contentsline {subsection}{Task 1 - Basic Markdown}{2}{section*.4}%
+\contentsline {subsection}{Task 2 - Import packages and data, suppressing messages}{2}{section*.5}%
+\contentsline {subsection}{\par \vfil \penalty -\@M }{3}{section*.6}%
+\contentsline {subsection}{Task 3: Creating tables}{3}{section*.7}%
+\contentsline {subsection}{Task 3: Plots}{4}{section*.8}%
+\contentsline {subsection}{Task 4: Knit and submit.}{6}{section*.9}%
+\contentsline {subsection}{Git Repository}{6}{section*.10}%
