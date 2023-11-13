@@ -116,9 +116,16 @@ EPAair.sites <- EPAair %>%
 #Convert to a spatial dataframe
 EPAair.sf <- EPAair.sites %>% 
   st_as_sf(coords = c('mean_Lng','mean_Lat'),
-           crs=4326)
+           crs=4326) #as simple feature
+#long is x, lat is y
 
 #View the data using the methods above...
+
+#View using ggplot
+ggplot(data=EPAair.sf) + geom_sf()
+
+#View using mapview
+mapview(EPAair.sf)
 
 ```
 
@@ -244,7 +251,6 @@ mean_distances <-  rowMeans(distance_matrix)
 #Add as a column to the epa sites
 EPAair.sf.utm  <-  EPAair.sf.utm %>% 
   bind_cols("AvgDistToGasPlant" = mean_distances)
-
 
 
 ```

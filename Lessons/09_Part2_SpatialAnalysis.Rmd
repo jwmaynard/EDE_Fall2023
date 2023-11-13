@@ -118,18 +118,26 @@ mapView(counties_sf, zcol = "AWATER")
 
 ```{r read HUCs shapefile}
 #Read the shapefile into an sf dataframe named "huc8_sf"
-
+huc8_sf<- st_read(here('Data/Spatial/NCHUC8.shp')) #%>% 
 
 #Reveal the columns
+colnames(huc8_sf)
 
 
 #Check the CRS
+st_crs(huc8_sf) 
 
 
 #Examine some records
 head(huc8_sf)
 
 #View the data as a map, colored by the acreage in each
+mapView(huc8_sf, zcol = "ACRES")
+
+
+ggplot(huc8_sf) +
+  geom_sf(aes(fill = ACRES)) +
+  scale_fill_viridis_c()
 
 
 
@@ -143,13 +151,17 @@ head(huc8_sf)
 ```{r Select the Upper Neuse HUC 8}
 #Read the shapefile into an sf dataframe
 
+huc8_sf_upper_neuse<- st_read(here('Data/Spatial/NCHUC8.shp')) %>% 
+  filter(SUBBASIN == "Upper Neuse")
 
 
 #Create a map
+mapView(huc8_sf, col.regions = "orange") |
+mapView(huc8_sf_upper_neuse, col.regions = "purple")
 
 
-
-
+install.packages('leaflet.extras2')
+library('leaflet.extras2')
 ```
 
 ### 2.2.4 Reading in GeoJSON data
@@ -169,7 +181,7 @@ If you have difficulty, the link you want is: - <https://services1.arcgis.com/Hp
 This a link to a spatial dataset in GeoJSON format. Now let's read this dataset in and explore it:
 
 ```{r load.geojson.data}
-powerplants_sf <- st_read('https://opendata.arcgis.com/datasets/ee0263bd105d41599be22d46107341c3_0.geojson')
+powerplants_sf <- st_read('https://services1.arcgis.com/Hp6G80Pky0om7QvQ/arcgis/rest/services/Plants_gdb/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson')
 
 #Reveal the field names
 colnames(powerplants_sf)
@@ -217,13 +229,13 @@ We'll focus on just a few variables: Estimates of people in poverty ("E_POV") an
 #Read the 2018 SVI county-level dataset for NC
 svi2018_nc_raw <- read.csv(
   'https://svi.cdc.gov/Documents/Data/2018/csv/states_counties/NorthCarolina_county.csv',
-  colClasses = c('FIPS' = 'factor')) %>% 
+  colClasses = c('FIPS' = 'factor')) %>% # imports FIPS as factor, strings as factor wouldnt work
   select(COUNTY, FIPS, LOCATION, E_TOTPOP, E_POV, E_MINRTY)
 
 #Check structure
 str(svi2018_nc_raw)
 
-#Join the SVI attributes to the county spatial features
+#d the SVI attributes to the county spatial features
 counties_sf_join <-  merge(x = counties_sf,
                            y = svi2018_nc_raw, 
                            by.x = "GEOID", 
@@ -254,7 +266,7 @@ ggplot() +
 #Compute HUC8 wind energy
 wind_raw <- read.csv('https://raw.githubusercontent.com/ENV859/EnviroAtlasData/main/Wind_Energy.csv',
   colClasses = c('HUC_12' = 'factor')) %>%  
-  mutate(HUC_8 = substr(HUC_12,1,8)) %>% 
+  mutate(HUC_8 = substr(HUC_12,1,8)) %>% #substring, grab from 1st to 8th value (gets HUC8)
   group_by(HUC_8) %>% 
   summarize(SumWindEnergy = sum(AvgWindEnergy))
   
@@ -262,7 +274,10 @@ wind_raw <- read.csv('https://raw.githubusercontent.com/ENV859/EnviroAtlasData/m
 huc8_sf_join = merge(x = huc8_sf,
                      y = wind_raw,
                      by.x = 'HUC_8',
-                     by.y = 'HUC_8')
+                     by.y = 'HUC_8') #full join way
+
+huc8_sf_join = huc8_sf %>% 
+  left_join(wind_raw, by = c('HUC_8', 'HUC_8'))
 
 #View the outputs
 ggplot(data=huc8_sf_join) +
@@ -294,13 +309,19 @@ mapview(state_sf)
 
 ```{r Aggregate the HUC data on an attribute, saving as huc2_sf}
 #List the unique values in the DWQ_Basin field
-
+unique(huc8_sf$DWQ_Basin)
 
 
 #Summarize on DWQ Basin value
-
+huc2_sf <- huc8_sf %>% 
+  group_by(DWQ_Basin) %>% 
+  summarize(
+    ACRES = sum(ACRES),
+    SQ_MILE = sum(SQ_MILES)
+  )
 
 #Map the data
+mapview(huc2_sf, zcol = 'ACRES')
 
 
 ```
@@ -355,11 +376,11 @@ myMap = mapview(neuse_sf,
 myMap
 
 #Select intersecting counties using matrix subsetting
-neuse_intersect_1 <- counties_sf_utm[neuse_sf,]
+neuse_intersect_1 <- counties_sf_utm[neuse_sf,] #same thing as an intersect
 
 #Select intersecting counties using the `filter()` command
 neuse_intersect_2 <- counties_sf_utm %>% 
-  filter(st_intersects(x = ., y = neuse_sf, sparse = FALSE))
+  filter(st_intersects(x = ., y = neuse_sf, sparse = FALSE)) #st_intersects, x = . means whatever gets put in, y = feature
 
 #View the result
 myMap + mapview(neuse_intersect_2, alpha.regions = 0)
@@ -367,7 +388,7 @@ myMap + mapview(neuse_intersect_2, alpha.regions = 0)
 #Actually intersect the counties (not just select those that intersect)
 neuse_counties_sf <- neuse_sf %>% 
   st_intersection(counties_sf_utm)
-myMap + mapview(neuse_counties_sf, alpha.regions = 0)
+myMap + mapview(neuse_counties_sf, alpha.regions = 0) #does not update area, etc
 
 #Update the area the features, now that some are clipped
 neuse_counties_sf <- neuse_counties_sf %>% 
@@ -381,17 +402,22 @@ mapview(neuse_counties_sf, zcol='Area_m2')
 
 ```{r EXERCISE: Clipping}
 #Select the Triangle County from the 
-
+the_triangle <- counties_sf_utm %>% 
+  filter(NAME %in% c("Catham", "Durham", "Orange", "Wake"))
 
   
 #Grab the intersecting HUC_8s
+the_hucs <- huc8_sf_utm[the_triangle,]
 
+
+mapview(the_hucs) + mapview(the_triangle, alpha.regions = 0, color = "red")
 
 
 #Intersect the HUC_8s
+the_huc_clip <- huc2_utm %>% 
+  st_intersection(the_triangle)
 
-
-
+mapview(the_huc_clip) + mapview(the_triangle, alpha.regions = 0, color = "red")
 ```
 
 ## 3.3 Geometry manipulations
